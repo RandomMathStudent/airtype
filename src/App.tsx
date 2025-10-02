@@ -17,7 +17,29 @@ export default function App() {
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
           await videoRef.current.play();
-        }
+          const v = videoRef.current!; 
+          const c = canvasRef.current; 
+          const dpr = window.devicePixelRatio || 1; 
+
+          const vw = v.videoWidth
+          const vh = v.videoHeight 
+
+          c.width =  Math.floor(vw*dpr);
+          c.height = Math.floor(vh.dpr);
+
+          c.style.width = "100%";
+          c.style.height = "100%"; 
+          
+
+          const ctx = c?.getContext("2d")!; 
+          ctx.setTransform(dpr,0,0,dpr,0,0); 
+
+
+          console.log("video:",vw,vh,"canvas px:",c.width,c.height, "dpr", dpr )
+          
+
+
+                }
       } catch (err) {
         console.error("Camera error:", err);
         alert("Could not access camera. Check permissions.");
