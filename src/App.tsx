@@ -1,11 +1,11 @@
 import { useEffect, useRef } from "react";
-
+import {Key} from 'C:/Users/alexa/airtype/src/KeyboardClasses.ts';
 
 let HandLandmarker : any; 
 
 let FilesetResolver : any; 
 
-
+const key = new Key("A",0,0);
 
 export default function App() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -71,7 +71,8 @@ export default function App() {
             ctx.setTransform(1, 0, 0, 1, 0, 0);
             ctx.clearRect(0, 0, c.width, c.height);
             ctx.restore();
-
+            
+           
             const ts = performance.now(); 
             console.log("[DEBUG] Calling detectForVideo at ts:", ts);
             const result = handLandmarker.detectForVideo(v, ts);
@@ -96,15 +97,25 @@ export default function App() {
                   ctx.beginPath();
                   ctx.arc(x, y, i === 0 ? 7 : 5, 0, Math.PI * 2);
                   ctx.fill();
-                }
-                const tip = lm[8];
-                const tipX = cssW * (1 - tip.x);
-                const tipY = cssH * tip.y;
-                ctx.beginPath();
-                ctx.arc(tipX, tipY, 9, 0, Math.PI * 2);
-                ctx.strokeStyle = "yellow";
-                ctx.lineWidth = 2;
-                ctx.stroke();
+                };
+                
+                const palmX = cssW * (1 - lm[0].x);
+                const palmY = cssH * lm[0].y; 
+                const middleX = cssW * (1 - lm[12].x);
+                const middleY = cssH * lm[12].y;
+                const dx = palmX - middleX;
+                const dy = palmY - middleY; 
+                const angle = Math.atan2(dy, dx); 
+                key.draw(ctx, palmX, palmY, angle);
+
+
+              
+
+
+
+
+
+
               }
               rafId = requestAnimationFrame(draw);
             } else {
